@@ -8,3 +8,25 @@
 （3）属性列表、对象归档适合小数据量存储和查询操作
 （4）Sqlite、CoreData适合大数据量存储和查询操作
 
+3.UITableviewCell高度计算的优化？
+（1）对于所有Cell高度固定的UITableView，使用self.tableview.rowHeight = xxx 而不是通过delegate的方式
+    来设置(避免多次调用委托方法)。
+（2）使用self.tableView.estimatedRowHeight = xxx ，使得Cell负责自身高度的计算。
+（3）参考http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/
+
+3.UITableview优化?
+  性能瓶颈一般来源于Cell高度的计算和Cell的绘制。
+  具体针对性优化(针对复杂的UITableView):
+（1）提前计算并缓存好高度（布局），因为heightForRowAtIndexPath:是调用最频繁的方法。
+（2）异步绘制，遇到复杂界面，遇到性能瓶颈时，可能就是突破口。
+（3）滑动时按需加载，这个在大量图片展示，网络加载的时候很管用！（SDWebImage已经实现异步加载，配合这条性能杠杠的）。
+   一般优化思路；
+（1）正确使用reuseIdentifier来重用Cells。
+（2）对UITableViewCell高度计算优化。
+（3）尽量使所有的view opaque，包括cell。尽量少用或不用透明图层。
+（4）如果Cell的内容来自Web，使用异步加载，并缓存结果.
+（5）减少subviews的数目。
+（6）尽量少用addView给Cell动态添加View，可以初始化时就添加，通过hide来控制显示。
+（7）在heightForRowAtIndexPath；中尽量不使用cellForRowAtIndexPath:，如果需要用到，只用一次后缓存结果。
+（8）手动用代码创建Cell代替用Xib和Stroryboard创建(需要系统转码，增加系统负担[不确定能优化多少])>
+  参考：http://www.cocoachina.com/ios/20150602/11968.html
