@@ -14,7 +14,7 @@
 （2）使用self.tableView.estimatedRowHeight = xxx ，使得Cell负责自身高度的计算。
 （3）参考http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/
 
-3.UITableview优化?
+4.UITableview优化?
   性能瓶颈一般来源于Cell高度的计算和Cell的绘制。
   具体针对性优化(针对复杂的UITableView):
 （1）提前计算并缓存好高度（布局），因为heightForRowAtIndexPath:是调用最频繁的方法。
