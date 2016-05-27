@@ -45,3 +45,9 @@
   http://www.cocoachina.com/ios/20150828/13244.html
   http://www.cnblogs.com/pengyingh/articles/2381673.html
 
+6.UIView的layoutsubviews的调用时机？
+（1）当view的bounds发生改变时。
+（2）当view的直接subView的bounds发生改变时。
+（3）当subView添加或移除时。
+（4）调用setNeedsLayout方法会在下一个显示周期主动调用layoutsubviews。
+
