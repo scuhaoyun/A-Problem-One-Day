@@ -51,3 +51,40 @@
 （3）当subView添加或移除时。
 （4）调用setNeedsLayout方法会在下一个显示周期主动调用layoutsubviews。
 
+7.什么是RunLoop?RunLoop和多线程的关系？
+（1）RunLoop 实际上就是一个对象，这个对象管理了其需要处理的事件和消息，并提供了一个入口函数来执行 Event Loop
+ 的逻辑。线程执行了这个函数后，就会一直处于这个函数内部 "接受消息->等待->处理" 的循环中，直到这个循环结束（比如传入
+ quit的消息），函数返回。 ﻿
+（2）runloop是运动循环,不断跑圈,无限循环。Runloop的功能就像他的名字听起来一样，使线程进入一个循环，当事件到达的
+时候调用事件处理方法。我们要自己提供实现Runloop实际循环运行的控制语句，话句话说就是我们要提供while或者for来驱动
+Runloop。在循环内部我们运行Runloop，当事件到达的时候调用事件处理器。
+（3）作用:
+   ﻿保持程序的持续运行 (iOS程序一直活着的原因)
+   ﻿处理App中的各种事件(eg:触摸事件/定时器事件/selector事件【选择器·performSelector···】)
+   节省CPU资源,提高程序的性能(有事做事,没事休息)
+   程序已启动,就开启了一个runloop无限循环,因此程序才能持续的运行
+   在Cocoa中，每个线程(NSThread)对象中内部都有一个run loop（NSRunLoop）对象用来循环处理输入事件，处理的事件
+包括两类，一是来自Input sources的异步事件，一是来自Timer sources的同步事件;
+run Loop在处理输入事件时会产生通知，可以通过Core Foundation向线程中添加run-loop observers来监听特定事件,
+以在监听的事件发生时做附加的处理工作。
+（4）Runloop与线程的关系
+  线程和 RunLoop 之间是一一对应的，其关系是保存在一个全局的 Dictionary 里。线程刚创建时并没有 RunLoop，如果你
+不主动获取，那它一直都不会有。RunLoop 的创建是发生在第一次获取时，RunLoop 的销毁是发生在线程结束时。你只能在一个
+线程的内部获取其 RunLoop（主线程除外）。
+（5）Runloop相关的类
+  CFRunloopRef
+  CFRunloopModeRef【Runloop的运行模式】
+  CFRunloopSourceRef【Runloop要处理的事件源】
+  CFRunloopTimerRef【Timer事件】
+  CFRunloopObserverRef【Runloop的观察者（监听者）】
+  一个 RunLoop 包含若干个 Mode，每个 Mode 又包含若干个 Source/Timer/Observer。每次调用 RunLoop 的主函数
+时，只能指定其中一个 Mode，这个Mode被称作 CurrentMode。如果需要切换 Mode，只能退出 Loop，再重新指定一个 Mode 进入。这样做主要是为了分隔开不同组的 Source/Timer/Observer，让其互不影响。Runloop要想跑起来,它的内部必须要有一个mode,mode中必须有source/observer/time,至少要有其中的一个。
+  参考：http://blog.ibireme.com/2015/05/18/runloop/
+
+8.MRC和ARC对比?
+MRC 的计数器机制改善了内存管理的方式，减少了各个模块的逻辑耦合，释放了程序员对“何时该释放”的心理压力，解决了大部分
+的问题。
+ARC 的初衷是为了让程序员写代码的时候更加便利，最好不用再关注任何内存释放的问题（也不用关注用什么方式初始化的问题）,
+系统在运行时统一管理所有内存对象的释放，会导致增加额外的内存和 CPU 开销，在硬件设备尚且处于低级阶段的时候，当程序员
+们依然在努力降低内存降低 CPU 消耗的时候，推出这样的机制，是不合时宜的！
+
