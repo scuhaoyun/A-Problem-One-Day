@@ -1,16 +1,14 @@
 1.IOS对象间的通信方式有哪些？
  对象之间通信方式主要有：直接方法调用，Target-Action,Delegate,回调(block,closure),KVO,通知
 
-2.iOS中有哪些数据持久化的方式，各有什么优点，iOS平台怎么做数据的持久化？CoreData和sqlite有无必然联系？
- CoreData是一个关系型数据库吗?
+2.iOS中有哪些数据持久化的方式，各有什么优点，iOS平台怎么做数据的持久化？CoreData和sqlite有无必然联系？CoreData是一个关系型数据库吗?
 （1）主要由四种持久化方式：属性列表、对象归档、SQLite数据库、CoreData
 （2）CoreData不是一个数据库，不过可以使用Sqlite数据库来保持数据，也可以使用其他的方式来存储数据，例如：xml
 （3）属性列表、对象归档适合小数据量存储和查询操作
 （4）Sqlite、CoreData适合大数据量存储和查询操作
 
 3.UITableviewCell高度计算的优化？
-（1）对于所有Cell高度固定的UITableView，使用self.tableview.rowHeight = xxx 而不是通过delegate的方式
-    来设置(避免多次调用委托方法)。
+（1）对于所有Cell高度固定的UITableView，使用self.tableview.rowHeight = xxx 而不是通过delegate的方式来设置(避免多次调用委托方法)。
 （2）使用self.tableView.estimatedRowHeight = xxx ，使得Cell负责自身高度的计算。
 （3）参考http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/
 
@@ -32,8 +30,7 @@
   参考：http://www.cocoachina.com/ios/20150602/11968.html
 
 5.UIView和CALayer的区别？
-（1）UIView是iOS系统中界面元素的基础，用来管理界面元素，继承UIkit,可以响应事件。而CALayer则是用来绘制界面元
-    素的，它继承自NSObject，不能响应事件。
+（1）UIView是iOS系统中界面元素的基础，用来管理界面元素，继承UIkit,可以响应事件。而CALayer则是用来绘制界面元素的，它继承自NSObject，不能响应事件。
 （2）UIView的绘制由CALayer负责。UIView主要侧重于对显示元素的管理，而CALayer主要侧重于对显示元素的绘制。
 （3）UIView的layer树形在系统内部，被系统维护着三份copy（这段理解有点吃不准）。
    第一份，逻辑树，就是代码里可以操纵的，例如更改layer的属性等等就在这一份。
@@ -52,41 +49,35 @@
 （4）调用setNeedsLayout方法会在下一个显示周期主动调用layoutsubviews。
 
 7.什么是RunLoop?RunLoop和多线程的关系？
-（1）RunLoop 实际上就是一个对象，这个对象管理了其需要处理的事件和消息，并提供了一个入口函数来执行 Event Loop
- 的逻辑。线程执行了这个函数后，就会一直处于这个函数内部 "接受消息->等待->处理" 的循环中，直到这个循环结束（比如传入
- quit的消息），函数返回。 ﻿
-（2）runloop是运动循环,不断跑圈,无限循环。Runloop的功能就像他的名字听起来一样，使线程进入一个循环，当事件到达的
-时候调用事件处理方法。我们要自己提供实现Runloop实际循环运行的控制语句，话句话说就是我们要提供while或者for来驱动
-Runloop。在循环内部我们运行Runloop，当事件到达的时候调用事件处理器。
+（1）RunLoop 实际上就是一个对象，这个对象管理了其需要处理的事件和消息，并提供了一个入口函数来执行 Event Loop的逻辑。线程执行了这个函数后，
+就会一直处于这个函数内部 "接受消息->等待->处理" 的循环中，直到这个循环结束（比如传入quit的消息），函数返回。 ﻿
+（2）runloop是运动循环,不断跑圈,无限循环。Runloop的功能就像他的名字听起来一样，使线程进入一个循环，当事件到达的时候调用事件处理方法。我们
+要自己提供实现Runloop实际循环运行的控制语句，话句话说就是我们要提供while或者for来驱动Runloop。在循环内部我们运行Runloop，当事件到达的时
+候调用事件处理器。
 （3）作用:
    ﻿保持程序的持续运行 (iOS程序一直活着的原因)
    ﻿处理App中的各种事件(eg:触摸事件/定时器事件/selector事件【选择器·performSelector···】)
    节省CPU资源,提高程序的性能(有事做事,没事休息)
    程序已启动,就开启了一个runloop无限循环,因此程序才能持续的运行
-   在Cocoa中，每个线程(NSThread)对象中内部都有一个run loop（NSRunLoop）对象用来循环处理输入事件，处理的事件
-包括两类，一是来自Input sources的异步事件，一是来自Timer sources的同步事件;
-run Loop在处理输入事件时会产生通知，可以通过Core Foundation向线程中添加run-loop observers来监听特定事件,
-以在监听的事件发生时做附加的处理工作。
+   在Cocoa中，每个线程(NSThread)对象中内部都有一个run loop（NSRunLoop）对象用来循环处理输入事件，处理的事件包括两类，一是来自
+Input sources的异步事件，一是来自Timer sources的同步事件;run Loop在处理输入事件时会产生通知，可以通过Core Foundation向线程中添加
+run-loop observers来监听特定事件,以在监听的事件发生时做附加的处理工作。
 （4）Runloop与线程的关系
-  线程和 RunLoop 之间是一一对应的，其关系是保存在一个全局的 Dictionary 里。线程刚创建时并没有 RunLoop，如果你
-不主动获取，那它一直都不会有。RunLoop 的创建是发生在第一次获取时，RunLoop 的销毁是发生在线程结束时。你只能在一个
-线程的内部获取其 RunLoop（主线程除外）。
+  线程和 RunLoop 之间是一一对应的，其关系是保存在一个全局的 Dictionary 里。线程刚创建时并没有 RunLoop，如果你不主动获取，那它一直都不会有。
+RunLoop 的创建是发生在第一次获取时，RunLoop 的销毁是发生在线程结束时。你只能在一个线程的内部获取其 RunLoop（主线程除外）。
 （5）Runloop相关的类
   CFRunloopRef
   CFRunloopModeRef【Runloop的运行模式】
   CFRunloopSourceRef【Runloop要处理的事件源】
   CFRunloopTimerRef【Timer事件】
   CFRunloopObserverRef【Runloop的观察者（监听者）】
-  一个 RunLoop 包含若干个 Mode，每个 Mode 又包含若干个 Source/Timer/Observer。每次调用 RunLoop 的主函数
-时，只能指定其中一个 Mode，这个Mode被称作 CurrentMode。如果需要切换 Mode，只能退出 Loop，再重新指定一个 Mode
- 进入。这样做主要是为了分隔开不同组的 Source/Timer/Observer，让其互不影响。Runloop要想跑起来,它的内部必须要有一
-个mode,mode中必须有source/observer/time,至少要有其中的一个。
+  一个 RunLoop 包含若干个 Mode，每个 Mode 又包含若干个 Source/Timer/Observer。每次调用 RunLoop 的主函数时，只能指定其中一个 Mode，这
+个Mode被称作 CurrentMode。如果需要切换 Mode，只能退出 Loop，再重新指定一个 Mode进入。这样做主要是为了分隔开不同组的 Source/Timer/Observer，
+让其互不影响。Runloop要想跑起来,它的内部必须要有一个mode,mode中必须有source/observer/time,至少要有其中的一个。
   参考：http://blog.ibireme.com/2015/05/18/runloop/
 
 8.MRC和ARC对比?
-MRC 的计数器机制改善了内存管理的方式，减少了各个模块的逻辑耦合，释放了程序员对“何时该释放”的心理压力，解决了大部分
-的问题。
-ARC 的初衷是为了让程序员写代码的时候更加便利，最好不用再关注任何内存释放的问题（也不用关注用什么方式初始化的问题）,
-系统在运行时统一管理所有内存对象的释放，会导致增加额外的内存和 CPU 开销，在硬件设备尚且处于低级阶段的时候，当程序员
-们依然在努力降低内存降低 CPU 消耗的时候，推出这样的机制，是不合时宜的！
+MRC 的计数器机制改善了内存管理的方式，减少了各个模块的逻辑耦合，释放了程序员对“何时该释放”的心理压力，解决了大部分的问题。
+ARC 的初衷是为了让程序员写代码的时候更加便利，最好不用再关注任何内存释放的问题（也不用关注用什么方式初始化的问题）,系统在运行时统一管理所有内存对象的
+释放，会导致增加额外的内存和 CPU 开销，在硬件设备尚且处于低级阶段的时候，当程序员们依然在努力降低内存降低 CPU 消耗的时候，推出这样的机制，是不合时宜的！
 
