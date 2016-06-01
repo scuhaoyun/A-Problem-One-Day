@@ -82,3 +82,12 @@ ARC 的初衷是为了让程序员写代码的时候更加便利，最好不用�
 的释放，会导致增加额外的内存和 CPU 开销，在硬件设备尚且处于低级阶段的时候，当程序员们依然在努力降低内存降低 CPU 消耗的时候，推出这样的机制，是不合
 时宜的！
 
+9.什么情况下用weak关键字？
+（1）在ARC中，在有可能出现循环引用的时候，往往要通过让其中一端使用weak来解决，比如delegate。
+（2）自身已经对它进行一次强引用，没有必要再强引用一次，此时也使用weak，自定义IBOutlet连出来的控件属性一般也使用weak，当然他也可以用Strong[原因：
+使用storyboard创建的viewController，那么会有一个叫 _topLevelObjectsToKeepAliveFromStoryboard的私有数组强引用所有top level的对象，
+同时top level对象强引用所有子对象，那么vc没必要再强引用top level对象的子对象，IBOutlet的属性一般可以设为weak是因为它已经被view引用了，除非
+view被释放，否则IBOutlet的属性也不会被释放，另外IBOutlet属性的生命周期和view应该是一致的，所以IBOutlet属性一般设为weak]。
+
+10. BAD_ACCESS在什么情况下出现？ 
+ 访问了野指针，比如对一个已经释放的对象执行了release、访问已经释放对象的成员变量或者发消息。死循环
