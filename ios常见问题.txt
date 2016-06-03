@@ -91,3 +91,18 @@ view被释放，否则IBOutlet的属性也不会被释放，另外IBOutlet属性
 
 10. BAD_ACCESS在什么情况下出现？ 
  访问了野指针，比如对一个已经释放的对象执行了release、访问已经释放对象的成员变量或者发消息。死循环
+
+11.weak和unowned的区别和联系?
+(1)几时用weak,几时用unowned呢？
+   举Notification的例子来说,如果Self在闭包被调用的时候有可能是Nil,则使用weak.如果Self在闭包被调用的时候永远不会是Nil，则使用unowned。
+(2)使用unowned有什么坏处呢？
+   如果我们没有确定好Self在闭包里调用的时候不会是Nil就使用了unowned。当闭包调用的时候,访问到声明为unowned的Self时。程序就会奔溃。这类似于访问
+   了悬挂指针（进一步了解，请阅读Crash in Cocoa）。对于熟悉Objective-C的大家来说,unowned在这里就类似于OC的unsafe_unretained。在对象被清
+   除后,声明为weak的对象会置为nil,而声明为unowned的对象则不会。
+(3)那么既然unowned可能会导致崩溃,为什么我们不全部都用weak来声明呢？
+   原因是使用unowned声明,我们能直接访问。而用weak声明的,我们需要unwarp后才能使用。并且直接访问在速度上也更快。（这位国外的猿说:Unowned is 
+   faster and allows for immutability and nonoptionality. If you don't need weak, don't use it.），其实说到底,unowned的引入
+   是因为Swift的Optional机制。因此我们可以根据实际情况来选择使用weak还是unowned。个人建议,如果无法确定声明对象在闭包调用的时候永远不会是nil,还
+   是使用weak来声明。安全更重要。
+
+
