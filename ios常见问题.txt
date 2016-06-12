@@ -74,7 +74,7 @@ RunLoop 的创建是发生在第一次获取时，RunLoop 的销毁是发生在�
   一个 RunLoop 包含若干个 Mode，每个 Mode 又包含若干个 Source/Timer/Observer。每次调用 RunLoop 的主函数时，只能指定其中一个 Mode，这
 个Mode被称作 CurrentMode。如果需要切换 Mode，只能退出 Loop，再重新指定一个 Mode进入。这样做主要是为了分隔开不同组的 Source/Timer/Observer，
 让其互不影响。Runloop要想跑起来,它的内部必须要有一个mode,mode中必须有source/observer/time,至少要有其中的一个。
-  参考：http://blog.ibireme.com/2015/05/18/runloop/
+  参考：http://blog.ibireme.com/2015/05/18/runloop/  http://www.cocoachina.com/ios/20160612/16631.html
 
 8.MRC和ARC对比?
 MRC 的计数器机制改善了内存管理的方式，减少了各个模块的逻辑耦合，释放了程序员对“何时该释放”的心理压力，解决了大部分的问题。
@@ -121,3 +121,11 @@ view被释放，否则IBOutlet的属性也不会被释放，另外IBOutlet属性
     度这些任务很快就会造成不可预期的行为。这样可能会引起程序的完全挂起，因为低优先级的任务阻塞了高优先级任务，使它不能被执行。
 （5）虽然 GCD 是一个低层级的 C API ，但是它使用起来非常的直接。不过这也容易使开发者忘记并发编程中的许多注意事项和陷阱。
 
+14.什么是响应链？
+在我们点击屏幕的时候，iphone OS获取到了用户进行了“单击”这一行为，操作系统把包含这些点击事件的信息包装成UITouch和UIEvent形式的实例，然后找到当前运行的程序，
+逐级寻找能够响应这个事件的对象，直到没有响应者响应。这一寻找的过程，被称作事件的响应链，不同的响应者以链式的方式寻找。
+响应查找的顺序是： UIStatusBar相关的视图-> UIWindow -> UIView -> AView -> DView -> BView（系统在事件链传递的过程中一定会遍历所有的子视图判断是否
+能够响应点击事件）。可以推测出UIApplication对象维护着自己的一个响应者栈，当pointInSide: withEvent:返回yes的时候，响应者入栈。栈顶的响应者作为最优先处
+理事件的对象，假设AView不处理事件，那么出栈，移交给UIView，以此下去，直到事件得到了处理或者到达AppDelegate后依旧未响应，事件被摒弃为止。通过这个机制我们也
+可以看到controller是响应者栈中的例外，即便没有pointInSide: withEvent:的方法返回可响应，controller依旧能够入栈成为UIView的下一个响应者。
+参考:http://www.cocoachina.com/ios/20160113/14896.html
