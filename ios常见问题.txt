@@ -199,3 +199,13 @@ MRC下内存管理的缺点：
 多线程操作时，不确定哪个线程最后使用完毕
 参考:http://www.jianshu.com/p/262c1f8b7461
 
+18.为什么其他语言里叫函数调用，Object-C里则叫给我对象发消息(或者谈下对runtime的理解)?
+在很多编程语言中，类和方法在编译期就绑定在一起，而在OC中，方法调用是向类发送消息,如（bady cry）在运行时会转换成objc_msgSend(bady,cry),向对象发送消息时根据isa指针
+找到类，在根据类的调度表查找方法，没找到方法则在父类中查找直至基类，如果始终没有找到返回nil。Objc Runtime使得C具有了面向对象能力，在程序运行时创建，检查，修改类、对象
+和它们的方法。可以使用runtime的一系列方法实现。
+Objective-C是基于C语言加入了面向对象特性和消息转发机制的动态语言，这意味着它不仅需要一个编译器，还需要Runtime系统来动态创建类和对象，进行消息发送和转发。在Objective-C
+中，使用[receiver message]语法并不会马上执行receiver对象的message方法的代码，而是向receiver发送一条message消息，这条消息可能由receiver来处理，也可能由转发给其他
+对象来处理，也有可能假装没有接收到这条消息而没有处理。其实[receiver message]被编译器转化为：id objc_msgSend ( id self, SEL op, ... );  
+参考:http://www.jianshu.com/p/262c1f8b7461
+
+
