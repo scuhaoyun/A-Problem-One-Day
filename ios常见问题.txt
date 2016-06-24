@@ -188,3 +188,14 @@ IOS中一般用到的多线程技术有三种：NSThread,NSOperation,GCD（还�
     3> 提供了一些在GCD中不容易实现的特性,如:限制最大并发数量,操作之间的依赖关系.
 参考:http://www.jianshu.com/p/0b0d9b1f1f19 http://my.oschina.net/aofe/blog/270093
 
+17.什么是ARC（ARC是为了解决什么问题诞生的）？
+ARC是Auto Reference Counting的缩写，即自动引用计数，由编译器在代码合适的位置中自动添加retain/Release/Autorelease/dealloc方法从而进行内存管理.
+ARC几个要点：在对象被创建时 retain count +1，在对象被release时 retain count -1.当retain count 为0 时，销毁对象。程序中加入autoreleasepool的对象会由
+系统自动加上autorelease方法，如果该对象引用计数为0，则销毁。那么ARC是为了解决什么问题诞生的呢？这个得追溯到MRC手动内存管理时代说起。
+MRC下内存管理的缺点：
+当我们要释放一个堆内存时，首先要确定指向这个堆空间的指针都被release了。（避免提前释放）
+释放指针指向的堆空间，首先要确定哪些指针指向同一个堆，这些指针只能释放一次。（MRC下即谁创建，谁释放，避免重复释放）
+模块化操作时，对象可能被多个模块创建和使用，不能确定最后由谁去释放。
+多线程操作时，不确定哪个线程最后使用完毕
+参考:http://www.jianshu.com/p/262c1f8b7461
+
