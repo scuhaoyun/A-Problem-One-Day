@@ -27,51 +27,51 @@ KVO有显著的使用场景，当你希望监视一个属性的时候，我们�
 - Sqlite、CoreData适合大数据量存储和查询操作
 
 ###3.UITableviewCell高度计算的优化？
-（1）对于所有Cell高度固定的UITableView，使用self.tableview.rowHeight = xxx 而不是通过delegate的方式来设置(避免多次调用委托方法)。
-（2）使用self.tableView.estimatedRowHeight = xxx ，使得Cell负责自身高度的计算。
+- 对于所有Cell高度固定的UITableView，使用self.tableview.rowHeight = xxx 而不是通过delegate的方式来设置(避免多次调用委托方法)。
+- 使用self.tableView.estimatedRowHeight = xxx ，使得Cell负责自身高度的计算。
 [参考](http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/)
 
 ###4.UITableview优化?
 性能瓶颈一般来源于Cell高度的计算和Cell的绘制。
 具体针对性优化(针对复杂的UITableView):
-（1）提前计算并缓存好高度（布局），因为heightForRowAtIndexPath:是调用最频繁的方法。
-（2）异步绘制，遇到复杂界面，遇到性能瓶颈时，可能就是突破口。
-（3）滑动时按需加载，这个在大量图片展示，网络加载的时候很管用！（SDWebImage已经实现异步加载，配合这条性能杠杠的）。
+- 提前计算并缓存好高度（布局），因为heightForRowAtIndexPath:是调用最频繁的方法。
+- 异步绘制，遇到复杂界面，遇到性能瓶颈时，可能就是突破口。
+- 滑动时按需加载，这个在大量图片展示，网络加载的时候很管用！（SDWebImage已经实现异步加载，配合这条性能杠杠的）。
 一般优化思路；
-（1）正确使用reuseIdentifier来重用Cells。
-（2）对UITableViewCell高度计算优化。
-（3）尽量使所有的view opaque，包括cell。尽量少用或不用透明图层。
-（4）如果Cell的内容来自Web，使用异步加载，并缓存结果.
-（5）减少subviews的数目。
-（6）尽量少用addView给Cell动态添加View，可以初始化时就添加，通过hide来控制显示。
-（7）在heightForRowAtIndexPath；中尽量不使用cellForRowAtIndexPath:，如果需要用到，只用一次后缓存结果。
-（8）手动用代码创建Cell代替用Xib和Stroryboard创建(需要系统转码，增加系统负担[不确定能优化多少])>
+- 正确使用reuseIdentifier来重用Cells。
+- 对UITableViewCell高度计算优化。
+- 尽量使所有的view opaque，包括cell。尽量少用或不用透明图层。
+- 如果Cell的内容来自Web，使用异步加载，并缓存结果.
+- 减少subviews的数目。
+- 尽量少用addView给Cell动态添加View，可以初始化时就添加，通过hide来控制显示。
+- 在heightForRowAtIndexPath；中尽量不使用cellForRowAtIndexPath:，如果需要用到，只用一次后缓存结果。
+- 手动用代码创建Cell代替用Xib和Stroryboard创建(需要系统转码，增加系统负担[不确定能优化多少])>
 [参考](http://www.cocoachina.com/ios/20150602/11968.html)
 
 ###5.UIView和CALayer的区别？
-（1）UIView是iOS系统中界面元素的基础，用来管理界面元素，继承UIkit,可以响应事件。而CALayer则是用来绘制界面元素的，它继承自NSObject，不能响应事件。
-（2）UIView的绘制由CALayer负责。UIView主要侧重于对显示元素的管理，而CALayer主要侧重于对显示元素的绘制。
-（3）UIView的layer树形在系统内部，被系统维护着三份copy（这段理解有点吃不准）。
+- UIView是iOS系统中界面元素的基础，用来管理界面元素，继承UIkit,可以响应事件。而CALayer则是用来绘制界面元素的，它继承自NSObject，不能响应事件。
+- UIView的绘制由CALayer负责。UIView主要侧重于对显示元素的管理，而CALayer主要侧重于对显示元素的绘制。
+- UIView的layer树形在系统内部，被系统维护着三份copy（这段理解有点吃不准）。
 第一份，逻辑树，就是代码里可以操纵的，例如更改layer的属性等等就在这一份。
 第二份，动画树，这是一个中间层，系统正在这一层上更改属性，进行各种渲染操作。
 第三份，显示树，这棵树的内容是当前正被显示在屏幕上的内容。
 这三棵树的逻辑结构都是一样的，区别只有各自的属性。
-（4）CALayer的坐标系系统和UIView有点不一样，它多了一个叫anchorPoint的属性。
+- CALayer的坐标系系统和UIView有点不一样，它多了一个叫anchorPoint的属性。
 [参考1](http://www.cocoachina.com/ios/20150828/13244.html) [参考2](http://www.cnblogs.com/pengyingh/articles/2381673.html)
 
 ###6.UIView的layoutsubviews的调用时机？
-（1）当view的bounds发生改变时。
-（2）当view的直接subView的bounds发生改变时。
-（3）当subView添加或移除时。
-（4）调用setNeedsLayout方法会在下一个显示周期主动调用layoutsubviews。
+- 当view的bounds发生改变时。
+- 当view的直接subView的bounds发生改变时。
+- 当subView添加或移除时。
+- 调用setNeedsLayout方法会在下一个显示周期主动调用layoutsubviews。
 
 ###7.什么是RunLoop?RunLoop和多线程的关系？
-（1）RunLoop 实际上就是一个对象，这个对象管理了其需要处理的事件和消息，并提供了一个入口函数来执行 Event Loop的逻辑。线程执行了这个函数后，
+- RunLoop 实际上就是一个对象，这个对象管理了其需要处理的事件和消息，并提供了一个入口函数来执行 Event Loop的逻辑。线程执行了这个函数后，
 就会一直处于这个函数内部 "接受消息->等待->处理" 的循环中，直到这个循环结束（比如传入quit的消息），函数返回。 ﻿
-（2）runloop是运动循环,不断跑圈,无限循环。Runloop的功能就像他的名字听起来一样，使线程进入一个循环，当事件到达的时候调用事件处理方法。我们
+- runloop是运动循环,不断跑圈,无限循环。Runloop的功能就像他的名字听起来一样，使线程进入一个循环，当事件到达的时候调用事件处理方法。我们
 要自己提供实现Runloop实际循环运行的控制语句，话句话说就是我们要提供while或者for来驱动Runloop。在循环内部我们运行Runloop，当事件到达的时
 候调用事件处理器。
-（3）作用:
+- 作用:
 ﻿保持程序的持续运行 (iOS程序一直活着的原因)
 ﻿处理App中的各种事件(eg:触摸事件/定时器事件/selector事件【选择器·performSelector···】)
 节省CPU资源,提高程序的性能(有事做事,没事休息)
@@ -79,10 +79,10 @@ KVO有显著的使用场景，当你希望监视一个属性的时候，我们�
 在Cocoa中，每个线程(NSThread)对象中内部都有一个run loop（NSRunLoop）对象用来循环处理输入事件，处理的事件包括两类，一是来自
 Input sources的异步事件，一是来自Timer sources的同步事件;run Loop在处理输入事件时会产生通知，可以通过Core Foundation向线程中添加
 run-loop observers来监听特定事件,以在监听的事件发生时做附加的处理工作。
-（4）Runloop与线程的关系
+- Runloop与线程的关系
 线程和 RunLoop 之间是一一对应的，其关系是保存在一个全局的 Dictionary 里。线程刚创建时并没有 RunLoop，如果你不主动获取，那它一直都不会有。
 RunLoop 的创建是发生在第一次获取时，RunLoop 的销毁是发生在线程结束时。你只能在一个线程的内部获取其 RunLoop（主线程除外）。
-（5）Runloop相关的类
+- Runloop相关的类
 CFRunloopRef
 CFRunloopModeRef【Runloop的运行模式】
 CFRunloopSourceRef【Runloop要处理的事件源】
@@ -100,8 +100,8 @@ ARC 的初衷是为了让程序员写代码的时候更加便利，最好不用�
 时宜的！
 
 ###9.什么情况下用weak关键字？
-（1）在ARC中，在有可能出现循环引用的时候，往往要通过让其中一端使用weak来解决，比如delegate。
-（2）自身已经对它进行一次强引用，没有必要再强引用一次，此时也使用weak，自定义IBOutlet连出来的控件属性一般也使用weak，当然他也可以用Strong[原因：
+- 在ARC中，在有可能出现循环引用的时候，往往要通过让其中一端使用weak来解决，比如delegate。
+- 自身已经对它进行一次强引用，没有必要再强引用一次，此时也使用weak，自定义IBOutlet连出来的控件属性一般也使用weak，当然他也可以用Strong[原因：
 使用storyboard创建的viewController，那么会有一个叫 _topLevelObjectsToKeepAliveFromStoryboard的私有数组强引用所有top level的对象，
 同时top level对象强引用所有子对象，那么vc没必要再强引用top level对象的子对象，IBOutlet的属性一般可以设为weak是因为它已经被view引用了，除非
 view被释放，否则IBOutlet的属性也不会被释放，另外IBOutlet属性的生命周期和view应该是一致的，所以IBOutlet属性一般设为weak]。
@@ -110,13 +110,13 @@ view被释放，否则IBOutlet的属性也不会被释放，另外IBOutlet属性
  访问了野指针，比如对一个已经释放的对象执行了release、访问已经释放对象的成员变量或者发消息。死循环
 
 ###11.weak和unowned的区别和联系?
-(1)几时用weak,几时用unowned呢？
+- 几时用weak,几时用unowned呢？
 举Notification的例子来说,如果Self在闭包被调用的时候有可能是Nil,则使用weak.如果Self在闭包被调用的时候永远不会是Nil，则使用unowned。
-(2)使用unowned有什么坏处呢？
+- 使用unowned有什么坏处呢？
 如果我们没有确定好Self在闭包里调用的时候不会是Nil就使用了unowned。当闭包调用的时候,访问到声明为unowned的Self时。程序就会奔溃。这类似于访问
 了悬挂指针（进一步了解，请阅读Crash in Cocoa）。对于熟悉Objective-C的大家来说,unowned在这里就类似于OC的unsafe_unretained。在对象被清
 除后,声明为weak的对象会置为nil,而声明为unowned的对象则不会。
-(3)那么既然unowned可能会导致崩溃,为什么我们不全部都用weak来声明呢？
+- 那么既然unowned可能会导致崩溃,为什么我们不全部都用weak来声明呢？
 原因是使用unowned声明,我们能直接访问。而用weak声明的,我们需要unwarp后才能使用。并且直接访问在速度上也更快。（这位国外的猿说:Unowned is 
 faster and allows for immutability and nonoptionality. If you don't need weak, don't use it.），其实说到底,unowned的引入
 是因为Swift的Optional机制。因此我们可以根据实际情况来选择使用weak还是unowned。个人建议,如果无法确定声明对象在闭包调用的时候永远不会是nil,还
@@ -127,27 +127,27 @@ Apple 在推出 Swift 时就将其冠以先进，安全和高效的新一代编�
 先进:尾随闭包,枚举关联值,可选值,元组......
 安全:强制的类型安全,类型推断,强类型…
 高效:
-（1）相较于其前辈的 Objective-C，Swift 在编译期间就完成了方法的绑定，因此方法调用上不再是类似于 Smalltalk 的消息发送，而是直接获取方法地址并
+- 相较于其前辈的 Objective-C，Swift 在编译期间就完成了方法的绑定，因此方法调用上不再是类似于 Smalltalk 的消息发送，而是直接获取方法地址并
 进行调用。虽然 Objective-C 对运行时查找方法的过程进行了缓存和大量的优化，但是不可否认 Swift 的调用方式会更加迅速和高效。
-（2）与 Objective-C 不同，Swift 是一门强类型的语言，这意味 Swift 的运行时和代码编译期间的类型是一致的，这样编译器可以得到足够的信息来在生成中间
+- 与 Objective-C 不同，Swift 是一门强类型的语言，这意味 Swift 的运行时和代码编译期间的类型是一致的，这样编译器可以得到足够的信息来在生成中间
 码和机器码时进行优化。虽然都使用 LLVM 工具链进行编译，但是 Swift 的编译过程相比于 Objective-C 要多一个环节 -- 生成 Swift 中间代码 
 (Swift Intermediate Language，SIL)。SIL 中包含有很多根据类型假定的转换，这为之后进一步在更低层级优化提供了良好的基础，分析 SIL 也是我们探索
 Swift 性能的有效方法。
-（3）Swift 具有良好的内存使用的策略和结构。Swift 标准库中绝大部分类型都是 struct，对值类型的使用范围之广，在近期的编程语言中可谓首屈一指。原本值类
+- Swift 具有良好的内存使用的策略和结构。Swift 标准库中绝大部分类型都是 struct，对值类型的使用范围之广，在近期的编程语言中可谓首屈一指。原本值类
 型不可变性的特点，往往导致对于值的使用和修改意味着创建新的对象，但是 Swift 巧妙地规避了不必要的值类型复制，而仅只在必要时进行内存分配。这使得 Swift 
 在享受不可变性带来的便利以及避免不必要的共享状态的同时，还能够保持性能上的优秀。
 [参考](https://onevcat.com/2016/02/swift-performance/)
 
 ###13.GCD是什么？
-（1）为了让开发者更加容易的使用设备上的多核CPU，苹果在 OS X 10.6 和 iOS 4 中引入了 Grand Central Dispatch（GCD）。
-（2）通过 GCD，开发者不用再直接跟线程打交道了，只需要向队列中添加代码块即可，GCD 在后端管理着一个线程池。GCD 不仅决定着你的代码块将在哪个线程被执行，
+- 为了让开发者更加容易的使用设备上的多核CPU，苹果在 OS X 10.6 和 iOS 4 中引入了 Grand Central Dispatch（GCD）。
+- 通过 GCD，开发者不用再直接跟线程打交道了，只需要向队列中添加代码块即可，GCD 在后端管理着一个线程池。GCD 不仅决定着你的代码块将在哪个线程被执行，
 它还根据可用的系统资源对这些线程进行管理。这样可以将开发者从线程管理的工作中解放出来，通过集中的管理线程，来缓解大量线程被创建的问题。
-（3）GCD 带来的另一个重要改变是，作为开发者可以将工作考虑为一个队列，而不是一堆线程，这种并行的抽象模型更容易掌握和使用。
-（4）GCD 公开有 5 个不同的队列：运行在主线程中的 main queue，3 个不同优先级的后台队列，以及一个优先级更低的后台队列（用于 I/O）。 另外，开发者可以
+- GCD 带来的另一个重要改变是，作为开发者可以将工作考虑为一个队列，而不是一堆线程，这种并行的抽象模型更容易掌握和使用。
+- GCD 公开有 5 个不同的队列：运行在主线程中的 main queue，3 个不同优先级的后台队列，以及一个优先级更低的后台队列（用于 I/O）。 另外，开发者可以
 创建自定义队列：串行或者并行队列。自定义队列非常强大，在自定义队列中被调度的所有 block 最终都将被放入到系统的全局队列中和线程池中。使用不同优先级的若干
 个队列乍听起来非常直接，不过，我们强烈建议，在绝大多数情况下使用默认的优先级队列就可以了。如果执行的任务需要访问一些共享的资源，那么在不同优先级的队列中调
 度这些任务很快就会造成不可预期的行为。这样可能会引起程序的完全挂起，因为低优先级的任务阻塞了高优先级任务，使它不能被执行。
-（5）虽然 GCD 是一个低层级的 C API ，但是它使用起来非常的直接。不过这也容易使开发者忘记并发编程中的许多注意事项和陷阱。
+- 虽然 GCD 是一个低层级的 C API ，但是它使用起来非常的直接。不过这也容易使开发者忘记并发编程中的许多注意事项和陷阱。
 
 ###14.什么是响应链？
 在我们点击屏幕的时候，iphone OS获取到了用户进行了“单击”这一行为，操作系统把包含这些点击事件的信息包装成UITouch和UIEvent形式的实例，然后找到当前运行的程序，
@@ -169,21 +169,21 @@ class关键字相比起来就明白许多，是专门用在class类型的上下�
 义时使用的是class。
 
 ###16.IOS中的多线程?各自的优缺点?
-IOS中一般用到的多线程技术有三种：NSThread,NSOperation,GCD（还有一个Pthreads,POSIX线程的简称，是基于c语言的框架，很底层，一般不用）
+> IOS中一般用到的多线程技术有三种：NSThread,NSOperation,GCD（还有一个Pthreads,POSIX线程的简称，是基于c语言的框架，很底层，一般不用）
 1.NSThread:
-1> 使用NSThread对象建立一个线程非常方便;可以知道当前线程的各种属性，用于调试十分方便;轻量级;
-2> 但是!需要自己管理thread的生命周期，线程之间的同步,线程同步对数据的加锁会有一定的系统开销。要使用NSThread管理多个线程非常困难,不推荐使用;
-3> 技巧!使用[NSThread currentThread]跟踪任务所在线程,适用于这三种技术.
+- 使用NSThread对象建立一个线程非常方便;可以知道当前线程的各种属性，用于调试十分方便;轻量级;
+- 但是!需要自己管理thread的生命周期，线程之间的同步,线程同步对数据的加锁会有一定的系统开销。要使用NSThread管理多个线程非常困难,不推荐使用;
+- 技巧!使用[NSThread currentThread]跟踪任务所在线程,适用于这三种技术.
 2.GCD---Grand Central Dispatch:
-1> 通过GCD,开发者不用再直接跟线程打交道,只需要向队列中添加代码块即可. GCD自动管理线程的生命周期（创建线程、调度任务、销毁线程）; 是基于C语言的底层API;   
-2> GCD在后端管理着一个线程池,GCD不仅决定着代码块将在哪个线程被执行,它还根据可用的系统资源对这些线程进行管理,从而让开发者从线程管理的工作中解放出来;通过集中
+-  通过GCD,开发者不用再直接跟线程打交道,只需要向队列中添加代码块即可. GCD自动管理线程的生命周期（创建线程、调度任务、销毁线程）; 是基于C语言的底层API;   
+- GCD在后端管理着一个线程池,GCD不仅决定着代码块将在哪个线程被执行,它还根据可用的系统资源对这些线程进行管理,从而让开发者从线程管理的工作中解放出来;通过集中
 的管理线程,缓解大量线程被创建的问题.
-3> 使用GCD,开发者可以将工作考虑为一个队列,而不是一堆线程,这种并行的抽象模型更容易掌握和使用.
-4> 项目中使用GCD的优点是GCD本身非常简单、易用，对于不复杂的多线程操作，会节省代码量，而Block参数的使用，会是代码更为易读，建议在简单项目中使用。   
+- 使用GCD,开发者可以将工作考虑为一个队列,而不是一堆线程,这种并行的抽象模型更容易掌握和使用.
+- 项目中使用GCD的优点是GCD本身非常简单、易用，对于不复杂的多线程操作，会节省代码量，而Block参数的使用，会是代码更为易读，建议在简单项目中使用。   
 3.NSOperation/NSOperationQueue:
-1> 是使用GCD实现的一套Objective-C的API;NSOperation是对线程的高度抽象
-2> 是面向对象的多线程技术;只要聚焦于我们需要做的事情，而不必太操心线程的管理，同步等事情.
-3> 提供了一些在GCD中不容易实现的特性,如:限制最大并发数量,操作之间的依赖关系.
+- 是使用GCD实现的一套Objective-C的API;NSOperation是对线程的高度抽象
+- 是面向对象的多线程技术;只要聚焦于我们需要做的事情，而不必太操心线程的管理，同步等事情.
+- 提供了一些在GCD中不容易实现的特性,如:限制最大并发数量,操作之间的依赖关系.
 [参考1](http://www.jianshu.com/p/0b0d9b1f1f19) [参考2](http://my.oschina.net/aofe/blog/270093)
 
 ###17.什么是ARC（ARC是为了解决什么问题诞生的）？
