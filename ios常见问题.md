@@ -1,8 +1,8 @@
 ###1.IOS对象(controller)间的通信方式有哪些？各自的优缺点？
-> 对象之间通信方式主要有：直接方法调用，Target-Action,Delegate,回调(block,closure),KVO,Notification。  
-- delegate的优势：1.很严格的语法，所有能响应的时间必须在协议中有清晰的定义。2.因为有严格的语法，所以编译器能帮你检查是否实现了所有应该实现的
-方法，不容易遗忘和出错。3.使用delegate的时候，逻辑很清楚，控制流程可跟踪和识别。4.在一个controller中可以定义多个协议，每个协议有不同的delegate。
-5.没有第三方要求保持/监视通信过程，所以假如出了问题，那我们可以比较方便的定位错误代码。6.能够接受调用的协议方法的返回值，意味着delegate能够提供反馈
+对象之间通信方式主要有：直接方法调用，Target-Action,Delegate,回调(block,closure),KVO,Notification。  
+- delegate的优势：1. 很严格的语法，所有能响应的时间必须在协议中有清晰的定义。2. 因为有严格的语法，所以编译器能帮你检查是否实现了所有应该实现的
+方法，不容易遗忘和出错。3. 使用delegate的时候，逻辑很清楚，控制流程可跟踪和识别。4. 在一个controller中可以定义多个协议，每个协议有不同的delegate。
+5. 没有第三方要求保持/监视通信过程，所以假如出了问题，那我们可以比较方便的定位错误代码。6. 能够接受调用的协议方法的返回值，意味着delegate能够提供反馈
 信息给controller
 delegate的缺点：需要写的代码比较多。
 - notification的优势：1.不需要写多少代码，实现比较简单。2.一个对象发出的通知，多个对象能进行反应，一对多的方式实现很简单.
@@ -94,7 +94,7 @@ CFRunloopObserverRef【Runloop的观察者（监听者）】
 [参考](http://blog.ibireme.com/2015/05/18/runloop/)  [参考2](http://www.cocoachina.com/ios/20160612/16631.html)
 
 ###8.MRC和ARC对比?
-MRC 的计数器机制改善了内存管理的方式，减少了各个模块的逻辑耦合，释放了程序员对“何时该释放”的心理压力，解决了大部分的问题。
+- MRC 的计数器机制改善了内存管理的方式，减少了各个模块的逻辑耦合，释放了程序员对“何时该释放”的心理压力，解决了大部分的问题。
 ARC 的初衷是为了让程序员写代码的时候更加便利，最好不用再关注任何内存释放的问题（也不用关注用什么方式初始化的问题）,系统在运行时统一管理所有内存对象
 的释放，会导致增加额外的内存和 CPU 开销，在硬件设备尚且处于低级阶段的时候，当程序员们依然在努力降低内存降低 CPU 消耗的时候，推出这样的机制，是不合
 时宜的！
@@ -107,7 +107,7 @@ ARC 的初衷是为了让程序员写代码的时候更加便利，最好不用�
 view被释放，否则IBOutlet的属性也不会被释放，另外IBOutlet属性的生命周期和view应该是一致的，所以IBOutlet属性一般设为weak]。
 
 ###10. BAD_ACCESS在什么情况下出现？ 
- 访问了野指针，比如对一个已经释放的对象执行了release、访问已经释放对象的成员变量或者发消息。死循环
+- 访问了野指针，比如对一个已经释放的对象执行了release、访问已经释放对象的成员变量或者发消息。死循环
 
 ###11.weak和unowned的区别和联系?
 - 几时用weak,几时用unowned呢？
@@ -150,7 +150,7 @@ Swift 性能的有效方法。
 - 虽然 GCD 是一个低层级的 C API ，但是它使用起来非常的直接。不过这也容易使开发者忘记并发编程中的许多注意事项和陷阱。
 
 ###14.什么是响应链？
-在我们点击屏幕的时候，iphone OS获取到了用户进行了“单击”这一行为，操作系统把包含这些点击事件的信息包装成UITouch和UIEvent形式的实例，然后找到当前运行的程序，
+- 在我们点击屏幕的时候，iphone OS获取到了用户进行了“单击”这一行为，操作系统把包含这些点击事件的信息包装成UITouch和UIEvent形式的实例，然后找到当前运行的程序，
 逐级寻找能够响应这个事件的对象，直到没有响应者响应。这一寻找的过程，被称作事件的响应链，不同的响应者以链式的方式寻找。
 响应查找的顺序是： UIStatusBar相关的视图-> UIWindow -> UIView -> AView -> DView -> BView（系统在事件链传递的过程中一定会遍历所有的子视图判断是否
 能够响应点击事件）。可以推测出UIApplication对象维护着自己的一个响应者栈，当pointInSide: withEvent:返回yes的时候，响应者入栈。栈顶的响应者作为最优先处
@@ -159,7 +159,7 @@ Swift 性能的有效方法。
 [参考](http://www.cocoachina.com/ios/20160113/14896.html)
 
 ###15.Swift中static和class的区别?
-Swift中Swift中表示“类型范围作用域”的两个关键字为static和class。
+- Swift中Swift中表示“类型范围作用域”的两个关键字为static和class。
 在非class的类型上下文中，我们统一使用static来描述类型作用域。这包括在enum和struct中表述类型方法和类型属性时。在这两个值类型中，我们可以在类型范围内声明并使
 用存储属性，计算属性和方法。
 class关键字相比起来就明白许多，是专门用在class类型的上下文中的，可以用来修饰类方法以及类的计算属性。要特别注意class中现在是不能出现存储属性的。Apple表示今后
@@ -169,7 +169,7 @@ class关键字相比起来就明白许多，是专门用在class类型的上下�
 义时使用的是class。
 
 ###16.IOS中的多线程?各自的优缺点?
-> IOS中一般用到的多线程技术有三种：NSThread,NSOperation,GCD（还有一个Pthreads,POSIX线程的简称，是基于c语言的框架，很底层，一般不用）
+IOS中一般用到的多线程技术有三种：NSThread,NSOperation,GCD（还有一个Pthreads,POSIX线程的简称，是基于c语言的框架，很底层，一般不用）
 1.NSThread:
 - 使用NSThread对象建立一个线程非常方便;可以知道当前线程的各种属性，用于调试十分方便;轻量级;
 - 但是!需要自己管理thread的生命周期，线程之间的同步,线程同步对数据的加锁会有一定的系统开销。要使用NSThread管理多个线程非常困难,不推荐使用;
@@ -187,7 +187,7 @@ class关键字相比起来就明白许多，是专门用在class类型的上下�
 [参考1](http://www.jianshu.com/p/0b0d9b1f1f19) [参考2](http://my.oschina.net/aofe/blog/270093)
 
 ###17.什么是ARC（ARC是为了解决什么问题诞生的）？
-ARC是Auto Reference Counting的缩写，即自动引用计数，由编译器在代码合适的位置中自动添加retain/Release/Autorelease/dealloc方法从而进行内存管理.
+- ARC是Auto Reference Counting的缩写，即自动引用计数，由编译器在代码合适的位置中自动添加retain/Release/Autorelease/dealloc方法从而进行内存管理.
 ARC几个要点：在对象被创建时 retain count +1，在对象被release时 retain count -1.当retain count 为0 时，销毁对象。程序中加入autoreleasepool的对象会由
 系统自动加上autorelease方法，如果该对象引用计数为0，则销毁。那么ARC是为了解决什么问题诞生的呢？这个得追溯到MRC手动内存管理时代说起。
 MRC下内存管理的缺点：
@@ -198,7 +198,7 @@ MRC下内存管理的缺点：
 [参考](http://www.jianshu.com/p/262c1f8b7461）
 
 ###18.为什么其他语言里叫函数调用，Object-C里则叫给我对象发消息(或者谈下对runtime的理解)?
-在很多编程语言中，类和方法在编译期就绑定在一起，而在OC中，方法调用是向类发送消息,如（bady cry）在运行时会转换成objc_msgSend(bady,cry),向对象发送消息时根据isa指针
+- 在很多编程语言中，类和方法在编译期就绑定在一起，而在OC中，方法调用是向类发送消息,如（bady cry）在运行时会转换成objc_msgSend(bady,cry),向对象发送消息时根据isa指针
 找到类，在根据类的调度表查找方法，没找到方法则在父类中查找直至基类，如果始终没有找到返回nil。Objc Runtime使得C具有了面向对象能力，在程序运行时创建，检查，修改类、对象
 和它们的方法。可以使用runtime的一系列方法实现。
 Objective-C是基于C语言加入了面向对象特性和消息转发机制的动态语言，这意味着它不仅需要一个编译器，还需要Runtime系统来动态创建类和对象，进行消息发送和转发。在Objective-C
