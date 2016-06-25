@@ -35,8 +35,10 @@ KVO有显著的使用场景，当你希望监视一个属性的时候，我们�
 [参考](http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/)
 
 ###4.UITableview优化?
-性能瓶颈一般来源于Cell高度的计算和Cell的绘制。
-具体针对性优化(针对复杂的UITableView):
+> 性能瓶颈一般来源于Cell高度的计算和Cell的绘制。具体针对性优化(针对复杂的UITableView):
+
+
+
 - 提前计算并缓存好高度（布局），因为heightForRowAtIndexPath:是调用最频繁的方法。
 - 异步绘制，遇到复杂界面，遇到性能瓶颈时，可能就是突破口。
 - 滑动时按需加载，这个在大量图片展示，网络加载的时候很管用！（SDWebImage已经实现异步加载，配合这条性能杠杠的）。
@@ -126,10 +128,14 @@ faster and allows for immutability and nonoptionality. If you don't need weak, d
 是使用weak来声明。安全更重要。
 
 ###12.Swift和Objective-C对比?
-Apple 在推出 Swift 时就将其冠以先进，安全和高效的新一代编程语言之名。
-先进:尾随闭包,枚举关联值,可选值,元组......
-安全:强制的类型安全,类型推断,强类型…
-高效:
+> Apple 在推出 Swift 时就将其冠以先进，安全和高效的新一代编程语言之名。
+####先进:
+
+尾随闭包,枚举关联值,可选值,元组......
+####安全:
+
+强制的类型安全,类型推断,强类型…
+####高效:
 - 相较于其前辈的 Objective-C，Swift 在编译期间就完成了方法的绑定，因此方法调用上不再是类似于 Smalltalk 的消息发送，而是直接获取方法地址并
 进行调用。虽然 Objective-C 对运行时查找方法的过程进行了缓存和大量的优化，但是不可否认 Swift 的调用方式会更加迅速和高效。
 - 与 Objective-C 不同，Swift 是一门强类型的语言，这意味 Swift 的运行时和代码编译期间的类型是一致的，这样编译器可以得到足够的信息来在生成中间
@@ -172,18 +178,21 @@ class关键字相比起来就明白许多，是专门用在class类型的上下�
 义时使用的是class。
 
 ###16.IOS中的多线程?各自的优缺点?
-IOS中一般用到的多线程技术有三种：NSThread,NSOperation,GCD（还有一个Pthreads,POSIX线程的简称，是基于c语言的框架，很底层，一般不用）
-1.NSThread:
+> IOS中一般用到的多线程技术有三种：NSThread,NSOperation,GCD（还有一个Pthreads,POSIX线程的简称，是基于c语言的框架，很底层，一般不用）
+
+
+
+####1.NSThread:
 - 使用NSThread对象建立一个线程非常方便;可以知道当前线程的各种属性，用于调试十分方便;轻量级;
 - 但是!需要自己管理thread的生命周期，线程之间的同步,线程同步对数据的加锁会有一定的系统开销。要使用NSThread管理多个线程非常困难,不推荐使用;
 - 技巧!使用[NSThread currentThread]跟踪任务所在线程,适用于这三种技术.
-2.GCD---Grand Central Dispatch:
+####2.GCD---Grand Central Dispatch:
 -  通过GCD,开发者不用再直接跟线程打交道,只需要向队列中添加代码块即可. GCD自动管理线程的生命周期（创建线程、调度任务、销毁线程）; 是基于C语言的底层API;   
 - GCD在后端管理着一个线程池,GCD不仅决定着代码块将在哪个线程被执行,它还根据可用的系统资源对这些线程进行管理,从而让开发者从线程管理的工作中解放出来;通过集中
 的管理线程,缓解大量线程被创建的问题.
 - 使用GCD,开发者可以将工作考虑为一个队列,而不是一堆线程,这种并行的抽象模型更容易掌握和使用.
 - 项目中使用GCD的优点是GCD本身非常简单、易用，对于不复杂的多线程操作，会节省代码量，而Block参数的使用，会是代码更为易读，建议在简单项目中使用。   
-3.NSOperation/NSOperationQueue:
+####3.NSOperation/NSOperationQueue:
 - 是使用GCD实现的一套Objective-C的API;NSOperation是对线程的高度抽象
 - 是面向对象的多线程技术;只要聚焦于我们需要做的事情，而不必太操心线程的管理，同步等事情.
 - 提供了一些在GCD中不容易实现的特性,如:限制最大并发数量,操作之间的依赖关系.
@@ -193,7 +202,7 @@ IOS中一般用到的多线程技术有三种：NSThread,NSOperation,GCD（还�
 - ARC是Auto Reference Counting的缩写，即自动引用计数，由编译器在代码合适的位置中自动添加retain/Release/Autorelease/dealloc方法从而进行内存管理.
 ARC几个要点：在对象被创建时 retain count +1，在对象被release时 retain count -1.当retain count 为0 时，销毁对象。程序中加入autoreleasepool的对象会由
 系统自动加上autorelease方法，如果该对象引用计数为0，则销毁。那么ARC是为了解决什么问题诞生的呢？这个得追溯到MRC手动内存管理时代说起。
-MRC下内存管理的缺点：
+- MRC下内存管理的缺点：
 当我们要释放一个堆内存时，首先要确定指向这个堆空间的指针都被release了。（避免提前释放）
 释放指针指向的堆空间，首先要确定哪些指针指向同一个堆，这些指针只能释放一次。（MRC下即谁创建，谁释放，避免重复释放）
 模块化操作时，对象可能被多个模块创建和使用，不能确定最后由谁去释放。
