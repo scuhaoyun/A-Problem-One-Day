@@ -1,5 +1,8 @@
 ###1.IOS对象(controller)间的通信方式有哪些？各自的优缺点？
-对象之间通信方式主要有：直接方法调用，Target-Action,Delegate,回调(block,closure),KVO,Notification。  
+> 对象之间通信方式主要有：直接方法调用，Target-Action,Delegate,回调(block,closure),KVO,Notification。 
+
+ 
+
 - delegate的优势：1. 很严格的语法，所有能响应的时间必须在协议中有清晰的定义。2. 因为有严格的语法，所以编译器能帮你检查是否实现了所有应该实现的
 方法，不容易遗忘和出错。3. 使用delegate的时候，逻辑很清楚，控制流程可跟踪和识别。4. 在一个controller中可以定义多个协议，每个协议有不同的delegate。
 5. 没有第三方要求保持/监视通信过程，所以假如出了问题，那我们可以比较方便的定位错误代码。6. 能够接受调用的协议方法的返回值，意味着delegate能够提供反馈
