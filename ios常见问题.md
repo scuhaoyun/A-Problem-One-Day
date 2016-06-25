@@ -21,10 +21,10 @@ KVO有显著的使用场景，当你希望监视一个属性的时候，我们�
 [参考](http://www.jianshu.com/p/d57b055ae5c3)
 
 ###2.iOS中有哪些数据持久化的方式，各有什么优点，iOS平台怎么做数据的持久化？CoreData和sqlite有无必然联系？CoreData是一个关系型数据库吗?
-（1）主要由四种持久化方式：属性列表、对象归档、SQLite数据库、CoreData
-（2）CoreData不是一个数据库，不过可以使用Sqlite数据库来保持数据，也可以使用其他的方式来存储数据，例如：xml
-（3）属性列表、对象归档适合小数据量存储和查询操作
-（4）Sqlite、CoreData适合大数据量存储和查询操作
+- 主要由四种持久化方式：属性列表、对象归档、SQLite数据库、CoreData
+- CoreData不是一个数据库，不过可以使用Sqlite数据库来保持数据，也可以使用其他的方式来存储数据，例如：xml
+- 属性列表、对象归档适合小数据量存储和查询操作
+- Sqlite、CoreData适合大数据量存储和查询操作
 
 ###3.UITableviewCell高度计算的优化？
 （1）对于所有Cell高度固定的UITableView，使用self.tableview.rowHeight = xxx 而不是通过delegate的方式来设置(避免多次调用委托方法)。
