@@ -223,3 +223,8 @@ ARC几个要点：在对象被创建时 retain count +1，在对象被release时
 中，使用[receiver message]语法并不会马上执行receiver对象的message方法的代码，而是向receiver发送一条message消息，这条消息可能由receiver来处理，也可能由转发给其他
 对象来处理，也有可能假装没有接收到这条消息而没有处理。其实[receiver message]被编译器转化为：id objc_msgSend ( id self, SEL op, ... );  
 [参考](http://www.jianshu.com/p/262c1f8b7461)
+
+###19.什么是Method Swizzling？AOP?
+- Method Swizzling利用 Runtime 特性把一个方法的实现与另一个方法的实现进行替换。每个类里都有一个 Dispatch Table ，将方法的名字（SEL）跟方法的实现（IMP，指向 C 函数的指针）一一对应。Swizzle 一个方法其实就是在程序运行时在 Dispatch Table 里做点改动，让这个方法的名字（SEL）对应到另个 IMP 。
+- Aspect Oriented Programming （面向切面编程）：在 Objective-C 的世界里，这句话意思就是利用 Runtime 特性给指定的方法添加自定义代码。有很多方式可以实现 AOP ，Method Swizzling 就是其中之一。而且幸运的是，目前已经有一些第三方库可以让你不需要了解 Runtime ，就能直接开始使用 AOP 。
+- 利用 objective-C Runtime 特性和 Aspect Oriented Programming ，我们可以把琐碎事务的逻辑从主逻辑中分离出来，作为单独的模块。它是对面向对象编程模式的一个补充。
