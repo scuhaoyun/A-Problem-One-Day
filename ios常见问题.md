@@ -228,3 +228,26 @@ ARC几个要点：在对象被创建时 retain count +1，在对象被release时
 - Method Swizzling利用 Runtime 特性把一个方法的实现与另一个方法的实现进行替换。每个类里都有一个 Dispatch Table ，将方法的名字（SEL）跟方法的实现（IMP，指向 C 函数的指针）一一对应。Swizzle 一个方法其实就是在程序运行时在 Dispatch Table 里做点改动，让这个方法的名字（SEL）对应到另个 IMP 。
 - Aspect Oriented Programming （面向切面编程）：在 Objective-C 的世界里，这句话意思就是利用 Runtime 特性给指定的方法添加自定义代码。有很多方式可以实现 AOP ，Method Swizzling 就是其中之一。而且幸运的是，目前已经有一些第三方库可以让你不需要了解 Runtime ，就能直接开始使用 AOP 。
 - 利用 objective-C Runtime 特性和 Aspect Oriented Programming ，我们可以把琐碎事务的逻辑从主逻辑中分离出来，作为单独的模块。它是对面向对象编程模式的一个补充。
+[]
+
+###20. 使用drawRect有什么影响？
+重写drawRect可能会导致内存大量上涨，性能不稳定。CALayer其实也只是iOS当中一个普通的类，它也并不能直接渲染到屏幕上，因为屏幕上你所看到的东西，其实都是一张张图片。而为什么我们能看到CALayer的内容呢，是因为CALayer内部有一个contents属性。contents默认可以传一个id类型的对象，但是只有你传CGImage的时候，它才能够正常显示在屏幕上。所以最终我们的图形渲染落点落在contents身上。contents也被称为寄宿图，除了给它赋值CGImage之外，我们也可以直接对它进行绘制，通过继承UIView并实现-drawRect:方法即可自定义绘制。-drawRect: 方法没有默认的实现，因为对UIView来说，寄宿图并不是必须的，UIView不关心绘制的内容。如果UIView检测到-drawRect:方法被调用了，它就会为视图分配一个寄宿图，这个寄宿图的像素尺寸等于视图大小乘以contentsScale(这个属性与屏幕分辨率有关。画板视图的-drawRect:方法的背后实际上都是底层的CALayer进行了重绘和保存中间产生的图片，CALayer的delegate属性默认实现了CALayerDelegate协议，当它需要内容信息的时候会调用协议中的方法来拿。当画板视图重绘时，因为它的支持图层CALayer的代理就是画板视图本身，所以支持图层会请求画板视图给它一个寄宿图来显示，它此刻会调用：
+
+`(void)displayLayer:(CALayer *)layer;`
+
+如果画板视图实现了这个方法，就可以拿到layer来直接设置contents寄宿图，如果这个方法没有实现，支持图层CALayer会尝试调用：
+
+`- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;`
+
+这个方法调用之前，CALayer创建了一个合适尺寸的空寄宿图（尺寸由bounds和contentsScale决定）和一个Core Graphics的绘制上下文环境，为绘制寄宿图做准备，它作为ctx参数传入。在这一步生成的空寄宿图内存是相当巨大的，它就是本次内存问题的关键，一旦你实现了CALayerDelegate协议中的-drawLayer:inContext:方法或者UIView中的-drawRect:方法（其实就是前者的包装方法），图层就创建了一个绘制上下文，这个上下文需要的内存可从这个公式得出：图层宽*图层高*4字节，宽高的单位均为像素。
+[drawRect & 内存 -> 深究](http://blog.csdn.net/sandyloo/article/details/51063799)
+
+###21.沙盒目录结构是怎样的？各自用于那些场景？
+
+- Application//存放程序源文件，上架前经过数字签名，上架后不可修改
+- Documents//常用目录，iCloud备份目录，存放数据
+- Library
+   - Caches//存放体积大又不需要备份的数据
+   - Preference//设置目录，iCloud会备份设置信息
+- tmp//存放临时文件
+
