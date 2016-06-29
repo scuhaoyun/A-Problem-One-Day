@@ -216,6 +216,8 @@ ARC几个要点：在对象被创建时 retain count +1，在对象被release时
 [参考](http://www.jianshu.com/p/262c1f8b7461)
 
 ###18.为什么其他语言里叫函数调用，Object-C里则叫给我对象发消息(或者谈下对runtime的理解)?
+> Runtime系统是一个C语言动态库，在OC中，调用方法: [receiver message] 在编译器里会转换成消息机制里的消息发送形式:objc_msgSend(receiver, selector) 如果带参数的话： objc_msgSend(receiver, selector, arg1, arg2, ...) 消息功能为动态绑定做了很多有必要的工作。
+
 - 在很多编程语言中，类和方法在编译期就绑定在一起，而在OC中，方法调用是向类发送消息,如（bady cry）在运行时会转换成objc_msgSend(bady,cry),向对象发送消息时根据isa指针
 找到类，在根据类的调度表查找方法，没找到方法则在父类中查找直至基类，如果始终没有找到返回nil。Objc Runtime使得C具有了面向对象能力，在程序运行时创建，检查，修改类、对象
 和它们的方法。可以使用runtime的一系列方法实现。
