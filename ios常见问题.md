@@ -2,7 +2,6 @@
 > 对象之间通信方式主要有：直接方法调用，Target-Action,Delegate,回调(block,closure),KVO,Notification。 
 
  
-
 - delegate的优势：1. 很严格的语法，所有能响应的时间必须在协议中有清晰的定义。2. 因为有严格的语法，所以编译器能帮你检查是否实现了所有应该实现的
 方法，不容易遗忘和出错。3. 使用delegate的时候，逻辑很清楚，控制流程可跟踪和识别。4. 在一个controller中可以定义多个协议，每个协议有不同的delegate。5. 没有第三方要求保持/监视通信过程，所以假如出了问题，那我们可以比较方便的定位错误代码。6. 能够接受调用的协议方法的返回值，意味着delegate能够提供反馈
 信息给controller
@@ -34,7 +33,6 @@ KVO有显著的使用场景，当你希望监视一个属性的时候，我们�
 
 ###4.UITableview优化?
 > 性能瓶颈一般来源于Cell高度的计算和Cell的绘制。具体针对性优化(针对复杂的UITableView):
-
 
 
 - 提前计算并缓存好高度（布局），因为heightForRowAtIndexPath:是调用最频繁的方法。
@@ -172,7 +170,6 @@ Swift 性能的有效方法。
 > Swift中Swift中表示“类型范围作用域”的两个关键字为static和class。
 
 
-
 - 在非class的类型上下文中，我们统一使用static来描述类型作用域。这包括在enum和struct中表述类型方法和类型属性时。在这两个值类型中，我们可以在类型范围内声明并使
 用存储属性，计算属性和方法。
 - class关键字相比起来就明白许多，是专门用在class类型的上下文中的，可以用来修饰类方法以及类的计算属性。要特别注意class中现在是不能出现存储属性的。Apple表示今后
@@ -183,7 +180,6 @@ Swift 性能的有效方法。
 
 ###16.IOS中的多线程?各自的优缺点?
 > IOS中一般用到的多线程技术有三种：NSThread,NSOperation,GCD（还有一个Pthreads,POSIX线程的简称，是基于c语言的框架，很底层，一般不用）
-
 
 
 #### 1.NSThread:
@@ -206,8 +202,7 @@ Swift 性能的有效方法。
 
 ###17.什么是ARC（ARC是为了解决什么问题诞生的）？
 - ARC是Auto Reference Counting的缩写，即自动引用计数，由编译器在代码合适的位置中自动添加retain/Release/Autorelease/dealloc方法从而进行内存管理.
-ARC几个要点：在对象被创建时 retain count +1，在对象被release时 retain count -1.当retain count 为0 时，销毁对象。程序中加入autoreleasepool的对象会由
-系统自动加上autorelease方法，如果该对象引用计数为0，则销毁。那么ARC是为了解决什么问题诞生的呢？这个得追溯到MRC手动内存管理时代说起。
+ARC几个要点：在对象被创建时 retain count +1，在对象被release时 retain count -1.当retain count 为0 时，销毁对象。程序中加入autoreleasepool的对象会由系统自动加上autorelease方法，如果该对象引用计数为0，则销毁。那么ARC是为了解决什么问题诞生的呢？这个得追溯到MRC手动内存管理时代说起。
 - MRC下内存管理的缺点：
 当我们要释放一个堆内存时，首先要确定指向这个堆空间的指针都被release了。（避免提前释放）
 释放指针指向的堆空间，首先要确定哪些指针指向同一个堆，这些指针只能释放一次。（MRC下即谁创建，谁释放，避免重复释放）
@@ -230,7 +225,7 @@ ARC几个要点：在对象被创建时 retain count +1，在对象被release时
 - Method Swizzling利用 Runtime 特性把一个方法的实现与另一个方法的实现进行替换。每个类里都有一个 Dispatch Table ，将方法的名字（SEL）跟方法的实现（IMP，指向 C 函数的指针）一一对应。Swizzle 一个方法其实就是在程序运行时在 Dispatch Table 里做点改动，让这个方法的名字（SEL）对应到另个 IMP 。
 - Aspect Oriented Programming （面向切面编程）：在 Objective-C 的世界里，这句话意思就是利用 Runtime 特性给指定的方法添加自定义代码。有很多方式可以实现 AOP ，Method Swizzling 就是其中之一。而且幸运的是，目前已经有一些第三方库可以让你不需要了解 Runtime ，就能直接开始使用 AOP 。
 - 利用 objective-C Runtime 特性和 Aspect Oriented Programming ，我们可以把琐碎事务的逻辑从主逻辑中分离出来，作为单独的模块。它是对面向对象编程模式的一个补充。
-[]
+
 
 ###20. 使用drawRect有什么影响？
 重写drawRect可能会导致内存大量上涨，性能不稳定。CALayer其实也只是iOS当中一个普通的类，它也并不能直接渲染到屏幕上，因为屏幕上你所看到的东西，其实都是一张张图片。而为什么我们能看到CALayer的内容呢，是因为CALayer内部有一个contents属性。contents默认可以传一个id类型的对象，但是只有你传CGImage的时候，它才能够正常显示在屏幕上。所以最终我们的图形渲染落点落在contents身上。contents也被称为寄宿图，除了给它赋值CGImage之外，我们也可以直接对它进行绘制，通过继承UIView并实现-drawRect:方法即可自定义绘制。-drawRect: 方法没有默认的实现，因为对UIView来说，寄宿图并不是必须的，UIView不关心绘制的内容。如果UIView检测到-drawRect:方法被调用了，它就会为视图分配一个寄宿图，这个寄宿图的像素尺寸等于视图大小乘以contentsScale(这个属性与屏幕分辨率有关。画板视图的-drawRect:方法的背后实际上都是底层的CALayer进行了重绘和保存中间产生的图片，CALayer的delegate属性默认实现了CALayerDelegate协议，当它需要内容信息的时候会调用协议中的方法来拿。当画板视图重绘时，因为它的支持图层CALayer的代理就是画板视图本身，所以支持图层会请求画板视图给它一个寄宿图来显示，它此刻会调用：
