@@ -1,0 +1,4 @@
+###autorelease嵌套，系统怎么处理的?
+autorelease与release相似，是OC中的一个对象方法。这两个方法都能把对象的引用计数器减1，但是release是一个精确的减1，对对象的操作只能在release之前进行，如果是在之后，就会出现野指针错误；而autorelease是一个不精确的引用计数器减1，当给对象发送autorelease消息时，对象就会被放到自动释放池中，自动销毁时会给池中的所有对象发送release消息，使得所有对象的计数器减1，所以本质上autorelease还是会调用release。
+
+autoreleasepool是以栈结构存储的,先进后出,只有栈顶的Pool才处于活动状态,才可以装对象.并且因为是栈结构,所以销毁,是先销毁栈顶的pool,最后是栈底.
