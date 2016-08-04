@@ -1,4 +1,3 @@
-###索引
 <link rel="stylesheet" href="http://yandex.st/highlightjs/6.2/styles/googlecode.min.css">
   
 <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
@@ -148,9 +147,15 @@ faster and allows for immutability and nonoptionality. If you don't need weak, d
 ###12.Swift和Objective-C对比?
 > Apple 在推出 Swift 时就将其冠以先进，安全和高效的新一代编程语言之名。
 
-1. 先进:尾随闭包,枚举关联值,可选值,元组......
-2. 安全:强制的类型安全,类型推断,强类型…
-3. 高效:<br>
+
+
+####1.先进:
+
+尾随闭包,枚举关联值,可选值,元组......
+####2.安全:
+
+强制的类型安全,类型推断,强类型…
+####3.高效:
 - 相较于其前辈的 Objective-C，Swift 在编译期间就完成了方法的绑定，因此方法调用上不再是类似于 Smalltalk 的消息发送，而是直接获取方法地址并
 进行调用。虽然 Objective-C 对运行时查找方法的过程进行了缓存和大量的优化，但是不可否认 Swift 的调用方式会更加迅速和高效。
 - 与 Objective-C 不同，Swift 是一门强类型的语言，这意味 Swift 的运行时和代码编译期间的类型是一致的，这样编译器可以得到足够的信息来在生成中间
@@ -198,19 +203,19 @@ Swift 性能的有效方法。
 > IOS中一般用到的多线程技术有三种：NSThread,NSOperation,GCD（还有一个Pthreads,POSIX线程的简称，是基于c语言的框架，很底层，一般不用）
 
 
-1. NSThread:<br>
+#### 1.NSThread:
 - 使用NSThread对象建立一个线程非常方便;可以知道当前线程的各种属性，用于调试十分方便;轻量级;
 - 但是!需要自己管理thread的生命周期，线程之间的同步,线程同步对数据的加锁会有一定的系统开销。要使用NSThread管理多个线程非常困难,不推荐使用;
 - 技巧!使用[NSThread currentThread]跟踪任务所在线程,适用于这三种技术.
 
-2. GCD---Grand Central Dispatch:<br>
+#### 2.GCD---Grand Central Dispatch:
 -  通过GCD,开发者不用再直接跟线程打交道,只需要向队列中添加代码块即可. GCD自动管理线程的生命周期（创建线程、调度任务、销毁线程）; 是基于C语言的底层API;   
 - GCD在后端管理着一个线程池,GCD不仅决定着代码块将在哪个线程被执行,它还根据可用的系统资源对这些线程进行管理,从而让开发者从线程管理的工作中解放出来;通过集中
 的管理线程,缓解大量线程被创建的问题.
 - 使用GCD,开发者可以将工作考虑为一个队列,而不是一堆线程,这种并行的抽象模型更容易掌握和使用.
 - 项目中使用GCD的优点是GCD本身非常简单、易用，对于不复杂的多线程操作，会节省代码量，而Block参数的使用，会是代码更为易读，建议在简单项目中使用。
    
-3. NSOperation/NSOperationQueue:<br>
+#### 3.NSOperation/NSOperationQueue:
 - 是使用GCD实现的一套Objective-C的API;NSOperation是对线程的高度抽象
 - 是面向对象的多线程技术;只要聚焦于我们需要做的事情，而不必太操心线程的管理，同步等事情.
 - 提供了一些在GCD中不容易实现的特性,如:限制最大并发数量,操作之间的依赖关系.
