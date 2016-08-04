@@ -1,24 +1,33 @@
-<link rel="stylesheet" href="http://yandex.st/highlightjs/6.2/styles/googlecode.min.css">
-  
-<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
-<script src="http://yandex.st/highlightjs/6.2/highlight.min.js"></script>
-  
-<script>hljs.initHighlightingOnLoad();</script>
-<script type="text/javascript">
- $(document).ready(function(){
-      $("h2,h3,h4,h5,h6").each(function(i,item){
-        var tag = $(item).get(0).localName;
-        $(item).attr("id","wow"+i);
-        $("#category").append('<a class="new'+tag+'" href="#wow'+i+'">'+$(this).text()+'</a></br>');
-        $(".newh2").css("margin-left",0);
-        $(".newh3").css("margin-left",20);
-        $(".newh4").css("margin-left",40);
-        $(".newh5").css("margin-left",60);
-        $(".newh6").css("margin-left",80);
-      });
- });
-</script>
-<div id="category"></div>
+###索引
+1.IOS对象(controller)间的通信方式有哪些？各自的优缺点？
+2.iOS中有哪些数据持久化的方式，各有什么优点，iOS平台怎么做数据的持久化？CoreData和sqlite有无必然联系？CoreData是一个关系型数据库吗?
+3.UITableviewCell高度计算的优化？
+4.UITableview优化?
+5.UIView和CALayer的区别？
+6.UIView的layoutsubviews的调用时机？
+7.什么是RunLoop?RunLoop和多线程的关系？
+8.MRC和ARC对比?
+9.什么情况下用weak关键字？
+10. BAD_ACCESS在什么情况下出现？ 
+11.weak和unowned的区别和联系?
+12.Swift和Objective-C对比?
+13.GCD是什么？
+14.什么是响应链？
+15.Swift中static和class的区别?
+16.IOS中的多线程?各自的优缺点?
+17.什么是ARC（ARC是为了解决什么问题诞生的）？
+18.为什么其他语言里叫函数调用，Object-C里则叫给我对象发消息(或者谈下对runtime的理解)?
+19.什么是Method Swizzling？AOP?
+20. 使用drawRect有什么影响？
+21.沙盒目录结构是怎样的？各自用于那些场景？
+22.autorelease嵌套，系统怎么处理的?
+23.线程安全?
+24.UIView的生命周期？
+25.UIViewController的生命周期中各个方法执行流程？
+26.ios编译的过程？比如加载文件的顺序？
+27.iOS性能优化：Instruments使用实战？
+
+
 ###1.IOS对象(controller)间的通信方式有哪些？各自的优缺点？
 > 对象之间通信方式主要有：直接方法调用，Target-Action,Delegate,回调(block,closure),KVO,Notification。 
 
