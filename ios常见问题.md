@@ -1,4 +1,3 @@
-[TOC]
 ###1.IOS对象(controller)间的通信方式有哪些？各自的优缺点？
 > 对象之间通信方式主要有：直接方法调用，Target-Action,Delegate,回调(block,closure),KVO,Notification。 
 
