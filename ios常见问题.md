@@ -1,3 +1,4 @@
+[toc]
 ###索引
 1.IOS对象(controller)间的通信方式有哪些？各自的优缺点？<br>
 2.iOS中有哪些数据持久化的方式，各有什么优点，iOS平台怎么做数据的持久化？CoreData和sqlite有无必然联系？CoreData是一个关系型数据库吗?<br>
