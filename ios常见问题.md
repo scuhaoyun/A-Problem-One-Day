@@ -1,3 +1,4 @@
+[TOC]
 ###1.IOS对象(controller)间的通信方式有哪些？各自的优缺点？
 > 对象之间通信方式主要有：直接方法调用，Target-Action,Delegate,回调(block,closure),KVO,Notification。 
 
@@ -247,4 +248,78 @@ ARC几个要点：在对象被创建时 retain count +1，在对象被release时
    - Caches//存放体积大又不需要备份的数据
    - Preference//设置目录，iCloud会备份设置信息
 - tmp//存放临时文件
+
+###22.autorelease嵌套，系统怎么处理的?
+autorelease与release相似，是OC中的一个对象方法。这两个方法都能把对象的引用计数器减1，但是release是一个精确的减1，对对象的操作只能在release之前进行，如果是在之后，就会出现野指针错误；而autorelease是一个不精确的引用计数器减1，当给对象发送autorelease消息时，对象就会被放到自动释放池中，自动销毁时会给池中的所有对象发送release消息，使得所有对象的计数器减1，所以本质上autorelease还是会调用release。
+
+autoreleasepool是以栈结构存储的,先进后出,只有栈顶的Pool才处于活动状态,才可以装对象.并且因为是栈结构,所以销毁,是先销毁栈顶的pool,最后是栈底.
+
+参考[http://www.cnblogs.com/CoderAlex/p/5232357.html](http://www.cnblogs.com/CoderAlex/p/5232357.html)
+
+###23.线程安全?
+- OC在定义属性时有nonatomic和atomic两种选择：<br>
+atomic：原子属性，为setter方法加锁（默认就是atomic）,线程安全，需要消耗大量的资源<br>
+nonatomic：非原子属性，不会为setter方法加锁，非线程安全，适合内存小的设备
+- 使用互斥锁，@synchronized(锁对象) { // 需要锁定的代码  }<br>
+ 优点：能有效防止因多线程抢夺资源造成的数据安全问题<br>
+ 缺点：需要消耗大量的CPU资源<br>
+ 互斥锁的使用前提：多条线程抢夺同一块资源
+- “Object－C”语言<br>
+1）NSLock（互斥锁）<br>
+2） NSRecursiveLock（递归锁）:条件锁，递归或循环方法时使用此方法实现锁，可避免死锁等问题。<br>
+3） NSConditionLock（条件锁）:使用此方法可以指定，只有满足条件的时候才可以解锁。<br>
+4）NSDistributedLock（分布式锁）:在IOS中不需要用到，也没有这个方法，因此本文不作介绍，这里写出来只是想让大家知道有这个锁存在。<br>
+- C 语言<br>
+1） pthread_mutex_t（互斥锁）<br>
+2） GCD－信号量（“互斥锁”）<br>
+3） pthread_cond_t（条件锁）<br> 
+
+###24.UIView的生命周期？
+init、loadView、viewDidLoad、viewDidUnload、dealloc<br>
+
+1. init方法<br>
+在init方法中实例化必要的对象（遵从LazyLoad思想）,init方法中初始化ViewController本身
+ 
+2. loadView方法<br>
+ 当view需要被展示而它却是nil时，viewController会调用该方法。不要直接调用该方法。如果手工维护views，必须重载重写该方法,如果使用IB维护views，必须不能重载重写该方法,loadView和IB构建view
+ 
+3. viewDidLoad方法<br>
+ 重载重写该方法以进一步定制view
+4. viewDidUnload方法<br>
+内存吃紧时，在iPhone OS 3.0之前didReceiveMemoryWarning是释放无用内存的唯一方式，但是OS 3.0及以后viewDidUnload方法是更好的方式,viewDidLoad总是在loadView之后调用，不管你是不是通过nib文件创建的，这个方法总是会被调用的。viewDidUnload在收到内存警告的时候调用，在我的理解，这个方法里面应该做几件事情：<br>
+（1）、释放掉一些比较容易创建的对象，或者是一些比较占资源的对象（图片、音频等）<br>
+（2）、如果界面控件自己保持了引用计数，这里也要释放掉。（比如说，这个控件被设成了属性，而且是retain的，这个retain的引用计数就必须释放掉）<br>
+（3）、如果跨类的参数传递机制会在viewDidUnload以后产生不正常的效果，这里也必须处理。<br>
+ 
+5. dealloc方法
+dealloc负责realease 所有的 retain，copy形式的@proprety属性，而相应的本地临时变量，则全部在viewDidUnload中进行realease
+viewDidUnload将所有的局部变量和 retain，copy形式的@property先置为nil，后realease，
+
+###25.UIViewController的生命周期中各个方法执行流程？
+init—>loadView—>viewDidLoad—>viewWillApper—>viewDidApper—>viewWillDisapper—>viewDidDisapper—>viewWillUnload->viewDidUnload—>dealloc
+
+###26.ios编译的过程？比如加载文件的顺序？
+1. 编译各个依赖的子target<br>
+  预编译头文件<br>
+  编译.m和.c文件<br>
+  根据目标文件创建出一个库<br>
+  将产生的两个对应不同的架构的.a文件合并为一个通用的二进制文件
+2. 构建本程序的target<br>
+  PhaseScriptExecution ...<br>
+DataModelVersionCompile ...<br>
+Ld ...<br>
+GenerateDSYMFile ...<br>
+CopyStringsFile ...<br>
+CpResource ...<br>
+CopyPNGFile ...<br>
+CompileAssetCatalog ...<br>
+ProcessInfoPlistFile ...<br>
+ProcessProductPackaging /.../some-hash.mobileprovision ...<br>
+ProcessProductPackaging objcio/objcio.entitlements ...<br>
+CodeSign ...<br>
+[参考:http://www.tuicool.com/articles/uUzyyay](http://www.tuicool.com/articles/uUzyyay)
+
+###27.iOS性能优化：Instruments使用实战？
+![Alt text](http://cc.cocimg.com/api/uploads/20150215/1423964323709546.png)
+[参考:http://www.cocoachina.com/ios/20150225/11163.html]
 
